@@ -1,17 +1,17 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Update package lists and install Nginx if not installed
 apt-get update
 apt-get -y install nginx
-# Define the redirection domain (Change this to your target domain)
+# Define the redirection domain (Replace with your actual domain)
 REDIRECT_DOMAIN="http://your-new-destination.com"
-# Create an Nginx configuration file for the redirection
-cat <<EOF > /etc/nginx/sites-available/default
-server {
+# Create an Nginx configuration for the redirection
+echo "server {
     listen 80;
     server_name _;
 
     return 301 $REDIRECT_DOMAIN\$request_uri;
-}
-EOF
+}" > /etc/nginx/sites-available/default
 # Restart Nginx to apply changes
 systemctl restart nginx
+# Verify redirection by checking HTTP response
+curl -s -o /dev/null -w "%{http_code}" http://localhost
